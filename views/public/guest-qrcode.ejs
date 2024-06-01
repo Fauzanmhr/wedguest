@@ -1,0 +1,58 @@
+<%- include('../partials/header') %>
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Arial, sans-serif';
+    overflow: hidden;
+  }
+  .background-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-image: url('/bg.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .card {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  .card-title {
+    color: #d4a5a5; /* Blush Pink */
+    font-size: 2.5rem; /* Adjusted font size for responsiveness */
+  }
+  .card-body p {
+    color: #333;
+    font-size: 1.25rem; /* Increase font size */
+  }
+  .guest-name {
+    color: #ffd700 !important;  /* Gold */
+  }
+  .qr-code {
+    width: 300px; /* Adjust this value to make the QR code larger or smaller */
+    height: auto;
+    margin-top: 20px;
+  }
+</style>
+<body>
+  <div class="background-container">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title mb-4">Welcome, <span class="guest-name"><%= guest.fullname %></span>!</h1>
+        <p>We are overjoyed to have you with us on our special day.</p>
+        <hr class="my-4">
+        <p>Here is your QR code:</p>
+        <img class="qr-code" src="<%= guest.qrCodeWebP %>" alt="QR Code">
+        <p>May your day be filled with love, laughter, and wonderful memories.</p>
+      </div>
+    </div>
+  </div>
+  <%- include('../partials/footer') %>
+</body>
+</html>

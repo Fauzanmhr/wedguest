@@ -1,0 +1,75 @@
+<%- include('partials/header') %>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Arial, sans-serif';
+      overflow: hidden;
+    }
+    .welcome-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      background-image: url('/bg.webp');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .welcome-message {
+      text-align: center;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 50px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .welcome-message h1 {
+      color: #d4a5a5; /* Blush Pink */
+      font-size: 2.5rem; /* Adjusted font size for responsiveness */
+    }
+    .welcome-message p {
+      color: #333;
+      font-size: 1.25rem; /* Increase font size */
+    }
+    .welcome-message hr {
+      border-color: #1a0a3a; /* Gold */
+    }
+    .guest-name {
+      color: #ffd700 !important;  /* Gold */
+    }
+  </style>
+</head>
+<body>
+  <div class="welcome-container">
+    <div id="welcome-message" class="welcome-message">
+      <h1 class="display-4 fw-bold">Welcome!</h1>
+            <br>
+            <p class="col-md-8 mx-auto fs-6">We are overjoyed to have you with us on our special day.</p>
+            <hr class="my-4">
+            <p class="fs-4">May your day be filled with love, laughter, and wonderful memories.</p>
+    </div>
+  </div>
+
+  <script>
+    function fetchLastGuest() {
+      fetch('/panitia/welcome-data')
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.fullname) {
+            document.getElementById('welcome-message').innerHTML = `
+            <h1 class="display-4 fw-bold">Welcome!</h1>
+            <br>
+            <h1 class="display-5 fw-bold guest-name">${data.fullname}</h1>
+            <p class="col-md-8 mx-auto fs-6">We are overjoyed to have you with us on our special day.</p>
+            <hr class="my-4">
+            <p class="fs-4">May your day be filled with love, laughter, and wonderful memories.</p>
+            `;
+          }
+        });
+    }
+
+    setInterval(fetchLastGuest, 1000); // Poll every 1 second
+    fetchLastGuest(); // Initial fetch
+  </script>
+</body>
+</html>

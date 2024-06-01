@@ -1,0 +1,125 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar-admin') %>
+
+<div class="container">
+  <h1 class="mt-5">Manage Users</h1>
+
+  <!-- Flash Messages -->
+  <% if (successMessages.length > 0) { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <% successMessages.forEach(message => { %>
+        <%= message %><br>
+      <% }); %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% } %>
+  <% if (errorMessages.length > 0) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <% errorMessages.forEach(message => { %>
+        <%= message %><br>
+      <% }); %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% } %>
+
+  <!-- Button to Open the Modal -->
+  <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addUserModal">
+    Add User
+  </button>
+
+  <!-- The Modal -->
+  <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addUserModalLabel">Add User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/users/add" method="POST">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="mb-3">
+              <label for="fullname" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="fullname" name="fullname" required>
+            </div>
+            <div class="mb-3">
+              <label for="role" class="form-label">Role</label>
+              <select class="form-control" id="role" name="role" required>
+                <option value="admin">Admin</option>
+                <option value="panitia">Panitia</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add User</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Full Name</th>
+        <th>Role</th>
+        <th>Registration Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% users.forEach(user => { %>
+        <tr>
+          <td><%= user.username %></td>
+          <td><%= user.fullname %></td>
+          <td><%= user.role %></td>
+          <td><%= user.registration_date.toDateString() %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <!-- Pagination controls -->
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      <% if (page > 1) { %>
+        <li class="page-item">
+          <a class="page-link" href="?page=<%= page - 1 %>&limit=<%= limit %>" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+      <% } %>
+      <% 
+        let startPage = Math.max(1, page - 2);
+        let endPage = Math.min(totalPages, page + 2);
+        if (totalPages > 5) {
+          if (page <= 3) {
+            endPage = 5;
+          } else if (page >= totalPages - 2) {
+            startPage = totalPages - 4;
+          }
+        }
+      %>
+      <% for (let i = startPage; i <= endPage; i++) { %>
+        <li class="page-item <%= i === page ? 'active' : '' %>">
+          <a class="page-link" href="?page=<%= i %>&limit=<%= limit %>"><%= i %></a>
+        </li>
+      <% } %>
+      <% if (page < totalPages) { %>
+        <li class="page-item">
+          <a class="page-link" href="?page=<%= page + 1 %>&limit=<%= limit %>" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+</div>
+
+<%- include('../partials/footer') %>
+</body>

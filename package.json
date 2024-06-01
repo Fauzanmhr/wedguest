@@ -1,0 +1,32 @@
+{
+  "name": "wedguest",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Muhammad Fauzan Muharram",
+  "license": "GPL-3.0",
+  "description": "wedding guestbook management",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "bootstrap": "^5.3.3",
+    "connect-flash": "^0.1.1",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "exceljs": "^4.4.0",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.2.0",
+    "express-session": "^1.18.0",
+    "fast-csv": "^5.0.1",
+    "html5-qrcode": "^2.3.8",
+    "jquery": "^3.7.1",
+    "mariadb": "^3.3.0",
+    "multer": "^1.4.5-lts.1",
+    "qrcode": "^1.5.3",
+    "sequelize": "^6.37.3",
+    "uuid": "^9.0.1"
+  }
+}

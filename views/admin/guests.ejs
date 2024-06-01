@@ -1,0 +1,174 @@
+<%- include('../partials/header') %>
+<body>
+<%- include('../partials/navbar-admin') %>
+<div class="container mt-5">
+  <!-- Main Card -->
+  <div class="card">
+    <div class="card-body">
+      <h1 class="card-title mb-4 text-center">Guest List</h1>
+
+      <!-- Flash Messages -->
+      <% if (successMessages && successMessages.length > 0) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <% successMessages.forEach(message => { %>
+            <%= message %><br>
+          <% }); %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% } %>
+      <% if (errorMessages && errorMessages.length > 0) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <% errorMessages.forEach(message => { %>
+            <%= message %><br>
+          <% }); %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% } %>
+
+      <!-- Buttons to Open Modals -->
+      <div class="d-flex justify-content-start mb-4">
+        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addGuestModal">
+          Add Guest
+        </button>
+        <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#uploadCsvModal">
+          Upload CSV
+        </button>
+        <a href="/admin/guests/export" class="btn btn-secondary">
+          Export to Excel
+        </a>
+      </div>
+
+      <!-- Guest List Table -->
+      <div class="table-responsive">
+        <table class="table table-hover mt-4 text-center ">
+          <thead class="table-light text-center">
+            <tr>
+              <th>Name</th>
+              <th>Phone Number</th>
+              <th>Status</th>
+              <th>Info</th>
+              <th>QR Code</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% guests.forEach((guest, index) => { %>
+              <tr>
+                <td><%= guest.fullname %></td>
+                <td><%= guest.phone_number %></td>
+                <td><%= guest.status %></td>
+                <td><%= guest.info %></td>
+                <td>
+                  <a href="/public/qrcode/<%= guest.guest_id %>" class="btn btn-info btn-sm">
+                    View QR Code
+                  </a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Guest Modal -->
+  <div class="modal fade" id="addGuestModal" tabindex="-1" aria-labelledby="addGuestModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addGuestModalLabel">Add Guest</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/guests/add" method="POST">
+            <div class="mb-3">
+              <label for="fullname" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="fullname" name="fullname" required>
+            </div>
+            <div class="mb-3">
+              <label for="phone_number" class="form-label">Phone Number</label>
+              <input type="text" class="form-control" id="phone_number" name="phone_number">
+            </div>
+            <div class="mb-3">
+              <label for="status" class="form-label">Status</label>
+              <select class="form-select" id="status" name="status" required>
+                <option value="vip">VIP</option>
+                <option value="peserta">Peserta</option>
+                <option value="panitia">Panitia</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="info" class="form-label">Info</label>
+              <select class="form-select" id="info" name="info" required>
+                <option value="tamu mempelai pria">Tamu Mempelai Pria</option>
+                <option value="tamu mempelai wanita">Tamu Mempelai Wanita</option>
+                <option disabled value="tidak-terdaftar">Tidak Terdaftar</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Add Guest</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload CSV Modal -->
+  <div class="modal fade" id="uploadCsvModal" tabindex="-1" aria-labelledby="uploadCsvModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="uploadCsvModalLabel">Upload CSV</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/guests/upload" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="csvfile" class="form-label">Upload CSV File :</label>
+              <a href="/wedguest-example.csv">Download Example CSV</a>
+              <input type="file" class="form-control" id="csvfile" name="csvfile" accept=".csv" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Upload</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination Controls -->
+<nav aria-label="Page navigation" class="mt-4">
+  <ul class="pagination justify-content-center">
+    <% if (page > 1) { %>
+      <li class="page-item">
+        <a class="page-link" href="?page=<%= page - 1 %>&limit=<%= limit %>" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+    <% } %>
+    <% 
+      let startPage = Math.max(1, page - 2);
+      let endPage = Math.min(totalPages, page + 2);
+      if (totalPages > 5) {
+        if (page <= 3) {
+          endPage = 5;
+        } else if (page >= totalPages - 2) {
+          startPage = totalPages - 4;
+        }
+      }
+    %>
+    <% for (let i = startPage; i <= endPage; i++) { %>
+      <li class="page-item <%= i === page ? 'active' : '' %>">
+        <a class="page-link" href="?page=<%= i %>&limit=<%= limit %>"><%= i %></a>
+      </li>
+    <% } %>
+    <% if (page < totalPages) { %>
+      <li class="page-item">
+        <a class="page-link" href="?page=<%= page + 1 %>&limit=<%= limit %>" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    <% } %>
+  </ul>
+</nav>
+
+</div>
+<%- include('../partials/footer') %>
+</body>
