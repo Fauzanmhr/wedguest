@@ -28,9 +28,11 @@ router.use(authController.ensureAuthenticated, authController.ensureAdmin);
 
 router.get('/users', adminController.getUsers);
 router.post('/users/add', adminController.addUser);
+router.post('/users/delete/:id', adminController.deleteUser);
 router.get('/guests', adminController.getGuests);
 router.post('/guests/add', adminController.addGuest);
 router.post('/guests/upload', upload.single('csvfile'), adminController.uploadGuestsCsv);
+router.post('/guests/delete/:id', adminController.deleteGuest);
 router.post('/guests/send-invite', adminController.sendInvite);
 router.get('/guests/export', adminController.exportGuests);
 router.get('/attendance', adminController.getAttendance);

@@ -19,19 +19,19 @@ const generateQRCode = async (data) => {
 };
 
 exports.getUsers = async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 5 } = req.query;
   const offset = (page - 1) * limit;
 
   try {
     const { count, rows: users } = await User.findAndCountAll({
-      limit,
-      offset,
+      limit: parseInt(limit),  // Ensure limit is an integer
+      offset: parseInt(offset),  // Ensure offset is an integer
       order: [['registration_date', 'DESC']]
     });
 
     const totalPages = Math.ceil(count / limit);
 
-    res.render('admin/users', { users, page, totalPages, limit });
+    res.render('admin/users', { users, page: parseInt(page), totalPages, limit: parseInt(limit) });
   } catch (error) {
     console.error('Error fetching users:', error);
     req.flash('error', 'An error occurred while fetching users.');
@@ -42,6 +42,14 @@ exports.getUsers = async (req, res) => {
 exports.addUser = async (req, res) => {
   try {
     const { username, password, fullname, role } = req.body;
+
+    // Check if the username already exists
+    const existingUser = await User.findOne({ where: { username } });
+    if (existingUser) {
+      req.flash('error', 'Username already exists.');
+      return res.redirect('/admin/users');
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     await User.create({
       user_id: uuidv4(),
@@ -59,8 +67,21 @@ exports.addUser = async (req, res) => {
   res.redirect('/admin/users');
 };
 
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    await User.destroy({ where: { user_id: userId } });
+    req.flash('success', 'User deleted successfully.');
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    req.flash('error', 'Failed to delete user.');
+  }
+  res.redirect('/admin/users');
+};
+
+
 exports.getGuests = async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 5 } = req.query;
   const offset = (page - 1) * limit;
 
   try {
@@ -180,6 +201,18 @@ exports.uploadGuestsCsv = async (req, res) => {
     req.flash('error', 'Error processing CSV file.');
   }
 
+  res.redirect('/admin/guests');
+};
+
+exports.deleteGuest = async (req, res) => {
+  try {
+    const guestId = req.params.id;
+    await Guest.destroy({ where: { guest_id: guestId } });
+    req.flash('success', 'Guest deleted successfully.');
+  } catch (error) {
+    console.error('Error deleting guest:', error);
+    req.flash('error', 'Failed to delete guest.');
+  }
   res.redirect('/admin/guests');
 };
 
