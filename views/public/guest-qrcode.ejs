@@ -3,56 +3,100 @@
   body, html {
     height: 100%;
     margin: 0;
-    font-family: 'Arial, sans-serif';
-    overflow: hidden;
+    font-family: 'Georgia, serif';
+    background: linear-gradient(to right, #f7f1e3, #ffecd2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Prevent scrolling to maintain the layout */
   }
   .background-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0; /* Ensure the Vanta background is behind other elements */
+  }
+  .card-container {
+    position: relative;
+    z-index: 1; /* Ensure the card is above the Vanta background */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
-    background-image: url('/bg.webp');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    width: 100%;
   }
   .card {
     background-color: rgba(255, 255, 255, 0.9);
-    padding: 50px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 40px 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     text-align: center;
+    max-width: 600px;
+    margin: 20px;
   }
   .card-title {
-    color: #d4a5a5; /* Blush Pink */
-    font-size: 2.5rem; /* Adjusted font size for responsiveness */
+    color: #d45d79; /* Soft pink */
+    font-size: 2rem;
+    margin-bottom: 20px;
   }
   .card-body p {
-    color: #333;
-    font-size: 1.25rem; /* Increase font size */
+    color: #555;
+    font-size: 1.25rem;
+    margin-bottom: 20px;
   }
   .guest-name {
-    color: #ffd700 !important;  /* Gold */
+    color: #d45d79;
   }
   .qr-code {
-    width: 300px; /* Adjust this value to make the QR code larger or smaller */
+    width: 100%; /* Adjust this value to make the QR code larger or smaller */
     height: auto;
-    margin-top: 20px;
+    max-width: 300px; /* Ensure the QR code does not exceed a maximum width */
+  }
+  .divider {
+    border-top: 1px solid #ddd;
+    margin: 20px 0;
+  }
+  @media (min-width: 768px) {
+    .card {
+      padding: 40px 60px;
+    }
   }
 </style>
 <body>
-  <div class="background-container">
+  <div class="background-container" id="vanta-bg"></div>
+  <div class="card-container">
     <div class="card">
       <div class="card-body">
-        <h1 class="card-title mb-4">Welcome, <span class="guest-name"><%= guest.fullname %></span>!</h1>
+        <h1 class="card-title mb-4">Hello, <span class="guest-name"><%= guest.fullname %></span>!</h1>
         <p>We are overjoyed to have you with us on our special day.</p>
-        <hr class="my-4">
-        <p>Here is your QR code:</p>
+        <div class="divider"></div>
+        <p>Here is your personalized QR code:</p>
         <img class="qr-code" src="<%= guest.qrCodeWebP %>" alt="QR Code">
         <p>May your day be filled with love, laughter, and wonderful memories.</p>
       </div>
     </div>
   </div>
   <%- include('../partials/footer') %>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.21/vanta.birds.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      VANTA.BIRDS({
+        el: "#vanta-bg",
+        backgroundColor: 0xffffff, // White background color
+        color1: 0xff0000, // Primary bird color
+        color2: 0x00ff00, // Secondary bird color
+        colorMode: "lerp",
+        wingSpan: 20.00,
+        speedLimit: 6.00,
+        separation: 100.00,
+        alignment: 20.00,
+        cohesion: 20.00,
+        quantity: 4.00
+      });
+    });
+  </script>
 </body>
 </html>

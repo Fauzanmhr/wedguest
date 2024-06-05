@@ -36,10 +36,14 @@ app.use((req, res, next) => {
   next();
 });
 
-// Serve Bootstrap files statically
+// Serve Bootstrap CSS and JS
 app.use("/css", express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
 app.use("/js", express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')));
+
+// Serve HTML5 QR Code
 app.use("/js", express.static(path.join(__dirname, 'node_modules/html5-qrcode')));
+
+// Serve jQuery
 app.use("/js", express.static(path.join(__dirname, 'node_modules/jquery/dist')));
 
 // Set view engine
