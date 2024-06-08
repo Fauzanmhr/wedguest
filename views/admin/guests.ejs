@@ -75,6 +75,42 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Pagination Controls -->
+      <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+          <% if (page > 1) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= page - 1 %>&limit=<%= limit %>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+          <% } %>
+          <% 
+            let startPage = Math.max(1, page - 2);
+            let endPage = Math.min(totalPages, page + 2);
+            if (totalPages > 5) {
+              if (page <= 3) {
+                endPage = 5;
+              } else if (page >= totalPages - 2) {
+                startPage = totalPages - 4;
+              }
+            }
+          %>
+          <% for (let i = startPage; i <= endPage; i++) { %>
+            <li class="page-item <%= i === page ? 'active' : '' %>">
+              <a class="page-link" href="?page=<%= i %>&limit=<%= limit %>"><%= i %></a>
+            </li>
+          <% } %>
+          <% if (page < totalPages) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= page + 1 %>&limit=<%= limit %>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          <% } %>
+        </ul>
+      </nav>
     </div>
   </div>
 
@@ -141,41 +177,6 @@
     </div>
   </div>
 
-  <!-- Pagination Controls -->
-  <nav aria-label="Page navigation" class="mt-4">
-    <ul class="pagination justify-content-center">
-      <% if (page > 1) { %>
-        <li class="page-item">
-          <a class="page-link" href="?page=<%= page - 1 %>&limit=<%= limit %>" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-      <% } %>
-      <% 
-        let startPage = Math.max(1, page - 2);
-        let endPage = Math.min(totalPages, page + 2);
-        if (totalPages > 5) {
-          if (page <= 3) {
-            endPage = 5;
-          } else if (page >= totalPages - 2) {
-            startPage = totalPages - 4;
-          }
-        }
-      %>
-      <% for (let i = startPage; i <= endPage; i++) { %>
-        <li class="page-item <%= i === page ? 'active' : '' %>">
-          <a class="page-link" href="?page=<%= i %>&limit=<%= limit %>"><%= i %></a>
-        </li>
-      <% } %>
-      <% if (page < totalPages) { %>
-        <li class="page-item">
-          <a class="page-link" href="?page=<%= page + 1 %>&limit=<%= limit %>" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      <% } %>
-    </ul>
-  </nav>
 </div>
 
 <!-- Confirm Delete Modal -->
