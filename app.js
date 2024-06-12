@@ -15,6 +15,9 @@ dotenv.config();
 // Create Express app
 const app = express();
 
+// Trust the first proxy
+app.set('trust proxy', 1);
+
 // Middleware setup
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // for parsing application/json
