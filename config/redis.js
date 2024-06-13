@@ -16,7 +16,7 @@ redisClient.on('error', (err) => {
 async function connectWithRetry(attempts = 5, backoffBase = 1000, backoffExponent = 1.5) {
   try {
     await redisClient.connect();
-    console.log('Connected to Redis successfully.');
+    console.log('Connection to the database has been established successfully.');
   } catch (err) {
     if (attempts === 0) {
       console.error('Exhausted all retry attempts. Unable to connect to Redis:', err);
