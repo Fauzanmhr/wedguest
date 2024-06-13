@@ -1,4 +1,3 @@
-// Required modules
 const express = require('express');
 const session = require('express-session');
 const sequelize = require('./config/database');
@@ -8,6 +7,8 @@ const path = require('path');
 const dotenv = require('dotenv');
 const uuid = require('uuid');
 const bodyParser = require('body-parser');
+const RedisStore = require('connect-redis').default;
+const redisClient = require('./config/redis');
 
 // Load environment variables
 dotenv.config();
@@ -26,9 +27,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Session configuration
 app.use(session({
+  store: new RedisStore({ client: redisClient }),
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+    maxAge: 1000 * 60 * 60 * 24, // 1 day
+  },
 }));
 
 // Flash messages
