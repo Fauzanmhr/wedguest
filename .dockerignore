@@ -6,3 +6,4 @@ debug.log
 Dockerfile
 .gitignore
 README.md
+example.env
