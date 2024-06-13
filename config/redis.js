@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const redisUrl = `redis://${process.env.REDIS_URL}`;
+const redisUrl = `redis://${process.env.REDIS_HOST}`;
 
 const redisClient = createClient({
   url: redisUrl,
