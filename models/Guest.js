@@ -17,11 +17,11 @@ const Guest = sequelize.define('Guest', {
     type: DataTypes.STRING,
   },
   status: {
-    type: DataTypes.ENUM('vip', 'peserta', 'panitia'),
+    type: DataTypes.STRING,
     allowNull: false,
   },
   info: {
-    type: DataTypes.ENUM('tamu mempelai pria', 'tamu mempelai wanita', 'tidak-terdaftar'),
+    type: DataTypes.STRING,
     allowNull: false,
   },
   qr_code_url: {
