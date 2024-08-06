@@ -16,10 +16,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
       - name: Deploy
         run: |
           sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << EOF
-            git pull origin main
-            npm install
-            pm2 restart app
+          cd /wedguest
+          git pull origin main
+          npm install
+          pm2 restart app
           EOF
