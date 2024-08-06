@@ -19,7 +19,6 @@ jobs:
       - name: Deploy
         run: |
           sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << EOF
-            cd /wedguest
             git pull origin main
             npm install
             pm2 restart app
